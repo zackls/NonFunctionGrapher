@@ -21,7 +21,7 @@ public class Grapher
     //Higher accuracy means longer but more accurate picture generating
     static private float accuracy = (float)1;
     //Higher tolerance means less precise drawing
-    static private float tolerance = (float)1.0 / 600;
+    static private float tolerance = (float)1.0 / 75;
     static private String l;
     static private String r;
     static private ScriptEngineManager manager = new ScriptEngineManager();
@@ -100,8 +100,8 @@ public class Grapher
                 else if (mode.equals("H") || mode.equals("h"))
                 {
                     System.out.println("\nAll non-elementary expressions like tangent, power(^), and even absolute value must be written using the 'Math' class so that they may be parsed correctly, "
-                        + "so tangent(X) would be written as Math.tan(X), |X| would be Math.abs(X), and X^2 would be Math.pow(X, 2). So the expression X * sin(Y^X) would be written as "
-                        + "X * Math.sin(Math.pow(Y, X))\n");
+                        + "so tangent(X) would be written as Math.tan(X), |X| would be Math.abs(X), and X^2 would be Math.pow(X,2). So the expression X * sin(Y^X) would be written as "
+                        + "X*Math.sin(Math.pow(Y,X)). Avoid using spaces.\n");
                 }
                 else
                 {
@@ -124,8 +124,8 @@ public class Grapher
             }
             else
             {
-                l = "Math.cos(X * X + Y * Y)";
-                r = "Math.sin(Math.sqrt(Math.abs(X * Y)))";
+                l = "Math.cos(X*X+Y*Y)";
+                r = "Math.sin(Math.sqrt(Math.abs(X*Y)))";
                 System.out.println("F(X, Y) = " + l);
                 System.out.println("G(X, Y) = " + r);
             }
@@ -164,9 +164,10 @@ public class Grapher
     }
     static private Boolean areEqual(float X, float Y) throws ScriptException
     {
-        float upperLimit = L(X + ((maxX - minX) * tolerance), Y - ((maxY - minY) * tolerance));
-        float lowerLimit = L(X - ((maxX - minX) * tolerance), Y + ((maxY - minY) * tolerance));
+        float leftValue = L(X, Y);
         float rightValue = R(X, Y);
+        float upperLimit = leftValue - ((maxX - minX) * tolerance / 2 + (maxY - minY) * tolerance / 2);
+        float lowerLimit = leftValue + ((maxX - minX) * tolerance / 2 + (maxY - minY) * tolerance / 2);
         if (((lowerLimit <= rightValue) && (rightValue <= upperLimit)) || ((upperLimit <= rightValue) && (rightValue <= lowerLimit)))
         {
             return true;
